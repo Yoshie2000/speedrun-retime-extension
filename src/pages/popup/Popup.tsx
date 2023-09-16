@@ -1,37 +1,50 @@
 import React from "react";
-import logo from "@assets/img/logo.svg";
 import "@pages/popup/Popup.css";
-import useStorage from "@src/shared/hooks/useStorage";
-import exampleThemeStorage from "@src/shared/storages/exampleThemeStorage";
 import withSuspense from "@src/shared/hoc/withSuspense";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const Popup = () => {
-  const theme = useStorage(exampleThemeStorage);
+
+  const [url, setUrl] = useState<string>();
+  const [hasVideo, setHasVideo] = useState<boolean>();
+
+  const [isTiming, setIsTiming] = useState<boolean>(false);
+
+  useEffect(() => {
+
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      const activeTab = tabs.find(tab => tab.active)
+      chrome.tabs.sendMessage(
+        activeTab?.id,
+        { message: "popupOpen" },
+        ({ url, hasVideo, isEnabled }) => { setIsTiming(isEnabled); setUrl(url); setHasVideo(hasVideo) }
+      )
+    })
+
+  }, [])
+
+  const startTiming = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      const activeTab = tabs.find(tab => tab.active)
+      chrome.tabs.sendMessage(
+        activeTab?.id,
+        { message: "startTiming" }
+      )
+      setIsTiming(true);
+      window.close();
+    })
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p className="text-lime-400">
-          Edit <code>src/pages/popup/Popup.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React!
-        </a>
-        <button
-          style={{
-            color: theme === "light" ? "#fff" : "#000",
-          }}
-          onClick={exampleThemeStorage.toggle}
-        >
-          Toggle theme: [{theme}]
-        </button>
-      </header>
+    <div className="App text-white">
+
+      {!isTiming && !hasVideo && <p>No video on this page detected. Please refresh if this is a mistake.</p>}
+
+      {!isTiming && hasVideo && <button onClick={startTiming} className="rounded-[16px] bg-red-600 py-[8px] px-[16px] font-[16px] uppercase font-bold border border-red-300">Start</button>}
+      
+      {isTiming && <p>Timing is currently going on</p>}
+
     </div>
   );
 };

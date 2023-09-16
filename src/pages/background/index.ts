@@ -8,4 +8,10 @@ reloadOnUpdate("pages/background");
  */
 reloadOnUpdate("pages/content/style.scss");
 
-console.log("background loaded");
+chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+    if (changeInfo.status === "complete") {
+        chrome.tabs.sendMessage(tabId, {
+            message: "urlChanged"
+        })
+    }
+})

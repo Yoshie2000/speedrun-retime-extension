@@ -1,16 +1,18 @@
 import { createRoot } from "react-dom/client";
-import App from "@src/pages/content/components/Demo/app";
+import App from "@root/src/pages/content/components/app";
 import refreshOnUpdate from "virtual:reload-on-update-in-view";
 import { attachTwindStyle } from "@src/shared/style/twind";
 
 refreshOnUpdate("pages/content");
 
 const root = document.createElement("div");
-root.id = "chrome-extension-boilerplate-react-vite-content-view-root";
+root.style.overflow = "hidden";
+root.id = "speedrun-retime-extension";
 
 document.body.append(root);
 
 const rootIntoShadow = document.createElement("div");
+rootIntoShadow.style.overflow = "hidden";
 rootIntoShadow.id = "shadow-root";
 
 const shadowRoot = root.attachShadow({ mode: "open" });
