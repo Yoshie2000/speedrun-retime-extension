@@ -7,6 +7,11 @@ It offers video controls, including ones to step by just a single frame.
 
 It is also possible to add "loads" for loading times, at the end you will be given the RTA and IGT of the run.
 
+## Installation
+1. Download the latest release from this page (to your right, there should be a "releases" section).
+
+2. Install the .zip extension using a guide of your choice (e.g. [this YouTube video](https://youtu.be/vW8W19W_X0I))
+
 ## How to use
 1. Click on the extension icon. If it detects a video on the current page, there will be a "START" button. Click it to start the extension.
 
